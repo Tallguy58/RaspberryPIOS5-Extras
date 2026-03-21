@@ -242,7 +242,7 @@ sed -i 's/.*xserver-command=X.*/xserver-command=X -s 0 -dpms/' /etc/lightdm/ligh
 ## CHANGE IP ADDRESS/DEFAULT GATEWAY OF NETWORK ADAPTER
 echo -e '\033[1;33mUpdating   \033[1;34mStatic IP Address\033[0m'
 netid=$(nmcli -g NAME c show --active | grep -v 'lo')
-nmcli c mod "$netid" ipv4.method manual ipv4.addresses "192.168.0.160" ipv4.gateway "192.168.0.1" ipv4.dns "8.8.8.8,8.8.4.4"
+nmcli c mod "$netid" ipv4.method manual ipv4.addresses "192.168.0.160/24" ipv4.gateway "192.168.0.1" ipv4.dns "8.8.8.8,8.8.4.4"
 
 echo -e '\033[1;33mUpdating   \033[1;34mUser Permissions\033[0m' 
 chmod -Rf 0777 /home
