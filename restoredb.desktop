@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Restore KODI & MOZILLA User Profile
+Comment=Restore KODI & MOZILLA User Profile
+Exec=lxterminal -t "Installation Bash Script" --geometry=120x40 -e bash -c 'cd "%k"; sudo bash ./restoredb.sh'
+Icon=utilities-terminal
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=None;
