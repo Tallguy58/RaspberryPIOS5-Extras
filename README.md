@@ -7,5 +7,4 @@ Installation includes...
 * Samba file sharing
 * SimpleHTTPUploadServer
 * Games
-* Cinnamon Desktop theme
-* Icon Themes
+* LXAppearance Icon Themes
