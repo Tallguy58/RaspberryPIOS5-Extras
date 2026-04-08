@@ -35,16 +35,21 @@ install-package flatpak
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install -y --noninteractive flathub tv.kodi.Kodi
 
+if [ ! -d /home/$currentuser/.config/autostart ]; then
+  mkdir -p /home/$currentuser/.config/autostart
+fi
+
 ## AutoRun KODI
-echo -e '[Desktop Entry]'>/usr/share/xsessions/kodi.desktop
-echo -e 'Type=Application'>>/usr/share/xsessions/kodi.desktop
-echo -e 'Name=Kodi Media Center'>>/usr/share/xsessions/kodi.desktop
-echo -e 'Exec=/usr/share/runkodi.sh'>>/usr/share/xsessions/kodi.desktop
-chmod 0777 /usr/share/xsessions/kodi.desktop
+echo -e '[Desktop Entry]'>/home/$currentuser/.config/autostart/kodi.desktop
+echo -e 'Type=Application'>>/home/$currentuser/.config/autostart/kodi.desktop
+echo -e 'Name=Kodi Media Center'>>/home/$currentuser/.config/autostart/kodi.desktop
+echo -e 'Exec=/home/'$currentuser'/.config/autostart/runkodi.sh'>>/home/$currentuser/.config/autostart/kodi.desktop
+echo -e 'Terminal=False'>>/home/$currentuser/.config/autostart/kodi.desktop
+
 ## KODI Bash Script
-echo -e '#!/usr/bin/env bash'>/usr/share/runkodi.sh
-echo -e '/usr/bin/flatpak run --command=kodi tv.kodi.Kodi --standalone'>>/usr/share/runkodi.sh
-chmod 0777 /usr/share/runkodi.sh
+echo -e '#!/usr/bin/env bash'>/home/$currentuser/.config/autostart/runkodi.sh
+echo -e '/usr/bin/flatpak run --command=kodi tv.kodi.Kodi --standalone'>>/home/$currentuser/.config/autostart/runkodi.sh
+chmod 0777 /home/$currentuser/.config/autostart
 
 ## Keymap settings...
 mkdir -p /home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/
@@ -278,14 +283,6 @@ get-SimpleHTTPServerWithUpload
 get-games
 get-kodi
 desktop-settings
-
-install-package cinnamon-desktop-environment
-install-package lightdm-gtk-greeter-settings
-install-package cinnamon
-update-alternatives --set x-session-manager /usr/bin/cinnamon-session >/dev/null
-sed -i 's/.*autologin-user=.*/#autologin-user=/' /etc/lightdm/lightdm.conf
-sed -i 's/.*greeter-session=pi-greeter.*/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
-sed -i 's/.*xserver-command=X.*/xserver-command=X -s 0 -dpms/' /etc/lightdm/lightdm.conf
 
 ## CHANGE IP ADDRESS/DEFAULT GATEWAY OF NETWORK ADAPTER
 echo -e '\033[1;33mUpdating   \033[1;34mStatic IP Address\033[0m'
