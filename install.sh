@@ -39,17 +39,9 @@ if [ ! -d /home/$currentuser/.config/autostart ]; then
   mkdir -p /home/$currentuser/.config/autostart
 fi
 
-## AutoRun KODI
-echo -e '[Desktop Entry]'>/home/$currentuser/.config/autostart/kodi.desktop
-echo -e 'Type=Application'>>/home/$currentuser/.config/autostart/kodi.desktop
-echo -e 'Name=Kodi Media Center'>>/home/$currentuser/.config/autostart/kodi.desktop
-echo -e 'Exec=/home/'$currentuser'/.config/autostart/runkodi.sh'>>/home/$currentuser/.config/autostart/kodi.desktop
-echo -e 'Terminal=False'>>/home/$currentuser/.config/autostart/kodi.desktop
-
-## KODI Bash Script
-echo -e '#!/usr/bin/env bash'>/home/$currentuser/.config/autostart/runkodi.sh
-echo -e '/usr/bin/flatpak run --command=kodi tv.kodi.Kodi --standalone'>>/home/$currentuser/.config/autostart/runkodi.sh
-chmod 0777 /home/$currentuser/.config/autostart
+## AutoRun KODI & Add To Desktop
+cp -f /var/lib/flatpak/exports/share/applications/tv.kodi.Kodi.desktop /home/$currentuser/.config/autostart
+cp -f /var/lib/flatpak/exports/share/applications/tv.kodi.Kodi.desktop /home/$currentuser/Desktop
 
 ## Keymap settings...
 mkdir -p /home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/
@@ -249,10 +241,12 @@ install-package gnupg
 install-package curl
 install-package xterm
 install-package lxappearance
+install-package alacarte
 install-package arc-theme
 install-package papirus-icon-theme
 install-package breeze-icon-theme
 install-package elementary-icon-theme
+install-package mate-themes
 install-package gparted
 install-package breeze-cursor-theme
 remove-package squeekboard
@@ -289,17 +283,27 @@ echo -e '\033[1;33mUpdating   \033[1;34mStatic IP Address\033[0m'
 netid=$(nmcli -g NAME c show --active | grep -v 'lo')
 nmcli c mod "$netid" ipv4.method manual ipv4.addresses "192.168.0.160/24" ipv4.gateway "192.168.0.1" ipv4.dns "8.8.8.8,8.8.4.4"
 
+## USER AUTOLOGIN
+sed -i 's/.*autologin-user=.*/autologin-user='$currentuser'/' /etc/lightdm/lightdm.conf
+
 echo -e '\033[1;33mUpdating   \033[1;34mUser Permissions\033[0m' 
 chmod -Rf 0777 /home
 
-echo -e '\033[1;33mApplying Updates...\033[0m'
+echo -e '\033[1;33mFix Broken Dependencies...\033[0m'
 apt-get -y install -f >/dev/null
+echo -e '\033[1;33mFix Broken Installations...\033[0m'
 dpkg --configure -a >/dev/null
+echo -e '\033[1;33mFix Broken Dependencies...\033[0m'
 apt-get -y install -f >/dev/null
+echo -e '\033[1;33mDelete Cached Files...\033[0m'
 apt-get -y -qq clean >/dev/null
+echo -e '\033[1;33mDelete Obsolete Files...\033[0m'
 apt-get -y -qq autoclean >/dev/null
+echo -e '\033[1;33mApplying Updates...\033[0m'
 apt-get -y -qq update >/dev/null
+echo -e '\033[1;33mApplying Upgrades...\033[0m'
 apt-get --yes --allow-change-held-packages -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade >/dev/null
+echo -e '\033[1;33mRemove Orphaned Packages...\033[0m'
 apt-get -y -qq autoremove >/dev/null
 
 shutdown -r now
