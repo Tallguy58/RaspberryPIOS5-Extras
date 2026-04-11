@@ -19,6 +19,6 @@ sed -i 's/.*greeter-session=pi-greeter.*/greeter-session=lightdm-gtk-greeter/' /
 sed -i 's/.*xserver-command=X.*/xserver-command=X -s 0 -dpms/' /etc/lightdm/lightdm.conf
 
 apt-get -y -qq update >/dev/null
-apt-get -y -qq upgrade >/dev/null
+apt-get -y -qq --allow-change-held-packages -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -o APT::Get::Always-Include-Phased-Updates=true upgrade >/dev/null
 
 shutdown -r now
