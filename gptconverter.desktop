@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=MBR to GPT Converter
+Comment=MBR to GPT Converter
+Exec=lxterminal -t "Installation Bash Script" --geometry=120x40 -e bash -c 'cd "%k"; sudo bash ./gptconverter.sh'
+Icon=utilities-terminal
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=None;
