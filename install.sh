@@ -253,8 +253,7 @@ install-package papirus-icon-theme
 install-package breeze-icon-theme
 install-package elementary-icon-theme
 install-package mate-themes
-install-package ntfs-3g
-install-package ntfs-config
+install-package gnome-tweaks
 install-package gdisk
 install-package gparted
 install-package breeze-cursor-theme
