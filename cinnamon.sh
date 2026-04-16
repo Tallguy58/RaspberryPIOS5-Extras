@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [ "$XDG_SESSION_TYPE" != "x11" ]; then
+    echo -e '\033cScript must be run in \033[1;31mx11\033[0m session.\n'
+    read -n 1 -s -r -p 'Press ANY key to exit...'
+    exit
+fi
+
 currentuser=$(users | awk '{print $1}')
 
 install-package() {
