@@ -256,6 +256,9 @@ install-package mate-themes
 install-package gnome-tweaks
 install-package gdisk
 install-package gparted
+install-package dosfstools
+install-package mtools
+install-package ntfs-3g
 install-package breeze-cursor-theme
 remove-package squeekboard
 remove-package wfplug-squeek
