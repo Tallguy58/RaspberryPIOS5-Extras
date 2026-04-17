@@ -272,6 +272,7 @@ if [ -z "${dev}" ]; then
 	dev=$(findmnt -t ntfs3 -n -o source | head -1)
 fi
 if [ -n "${dev}" ]; then
+    echo -e $dev' is mounted as /mnt/shared_media'
     uuid=$(blkid -s UUID $dev | cut -f2 -d':' | cut -c2-)
     mountline=$uuid' /mnt/shared_media auto nosuid,nodev,nofail 0 0'
     if ! grep -Fxq $uuid' /mnt/shared_media auto nosuid,nodev,nofail 0 0' /etc/fstab
