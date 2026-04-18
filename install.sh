@@ -226,15 +226,12 @@ install-package libsmbclient0
 install-package libwbclient0
 install-package winbind
 install-package libnss-winbind
-mkdir -p /etc/samba
-cp -f files/smb.conf /etc/samba
 touch /etc/libuser.conf
 chmod 0777 -Rf /var/lib/samba/usershares
 files=$(ls -1 /var/lib/samba/usershares)
 if [ "$files" != """" ]; then
   rm -f /var/lib/samba/usershares/*
 fi
-run-in-user-session net usershare add Shared_Media /mnt/shared_media "Media Centre" Everyone:F guest_ok=y
 }
 
 reset
@@ -273,27 +270,84 @@ remove-package wfplug-squeek
 remove-package matchbox-keyboard
 remove-package orca
 
-## FIND NTFS DRIVE AND CREATE AN FSTAB MOUNT ENTRY.
+## FIND ALL NTFS DRIVES, CREATE FSTAB MOUNT ENTRIES AND CREATE SAMBA SHARING.
 dev=$(lsblk -o NAME,FSTYPE -n -r | grep "ntfs" | head -n 1 | awk '{print "/dev/"$1}')
-if [ -n "${dev}" ]; then
-	if [ ! -d /mnt/shared_media ]; then
-		mkdir -p /mnt/shared_media
-	fi
-    uuid=$(blkid -s UUID $dev | cut -f2 -d':' | cut -c2-)
-    mountline=$uuid' /mnt/shared_media auto nosuid,nodev,nofail 0 0'
-    if ! grep -Fxq $uuid' /mnt/shared_media auto nosuid,nodev,nofail 0 0' /etc/fstab; then
-		echo -e '\033[1;32m'$dev'\033[1;33m saved as \033[1;32m/mnt/shared_media\033[1;33m in filesystem table (\033[1;36m/etc/fstab\033[1;33m)\033[0m'
-        echo $mountline>>/etc/fstab
-	else
-		echo -e '\033[1;32m'$dev'\033[1;33m already saved as \033[1;32m/mnt/shared_media\033[1;33m in filesystem table (\033[1;36m/etc/fstab\033[1;33m). No changes made.\033[0m'
-    fi
+if [ -z "${dev}" ]; then
+    echo -e '\033[1;31mERROR: \033[1;33mNTFS formatted devices not detected!\033[0m'
 else
-	echo -e '\033[1;31mERROR: \033[1;33mNTFS formatted device not detected!\033[0m'
+	get-samba
+	get-SimpleHTTPServerWithUpload
+	if [ ! -d /etc/samba ]; then
+		mkdir -p /etc/samba
+	fi
+	cat <<EOF > /etc/samba/smb.conf
+[global]
+	workgroup = WORKGROUP
+	client min protocol = NT1
+	server min protocol = NT1
+	dns proxy = No
+	log file = /var/log/samba/log.%m
+	map to guest = Bad User
+	max log size = 1000
+	min receivefile size = 16384
+	name resolve order = bcast host lmhosts wins
+	obey pam restrictions = Yes
+	pam password change = Yes
+	panic action = /usr/share/samba/panic-action %d
+	passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+	passwd program = /usr/bin/passwd %u
+	preferred master = Yes
+	server role = standalone server
+	server string = %h server (Samba, Ubuntu)
+	socket options = TCP_NODELAY IPTOS_LOWDELAY
+	unix password sync = Yes
+	usershare allow guests = Yes
+	usershare owner only = No
+	wins support = yes
+	local master = yes
+	preferred master = yes
+	aio read size = 16384
+	aio write size = 16384
+	strict sync = No
+	use sendfile = Yes
+
+EOF
+    BASE_DIR="/mnt"
+    PREFIX="shared_media"
+    counter=0
+    for dev in $(blkid -t TYPE=ntfs -o device); do
+        if [ $counter -eq 0 ]; then
+            MOUNT_POINT="${BASE_DIR}/${PREFIX}"
+			run-in-user-session net usershare add shared_media $MOUNT_POINT "Media Centre" Everyone:F guest_ok=y
+        else
+            MOUNT_POINT="${BASE_DIR}/${PREFIX}$(printf "%02d" $counter)"
+			run-in-user-session net usershare add shared_media$counter $MOUNT_POINT "Media Centre"$counter Everyone:F guest_ok=y
+        fi
+		MOUNT_NAME="${MOUNT_POINT#\/mnt\/}"
+        if [ ! -d "$MOUNT_POINT" ]; then
+            mkdir -p "$MOUNT_POINT"
+        fi
+        uuid=$(blkid -s UUID $dev | cut -f2 -d':' | cut -c2-)
+        mountline=$uuid" "$MOUNT_POINT" auto nosuid,nodev,nofail 0 0"
+        if ! grep -Fxq $uuid" "$MOUNT_POINT" auto nosuid,nodev,nofail 0 0" /etc/fstab; then
+            echo -e '\033[1;32m'$dev'\033[1;33m saved as \033[1;32m'$MOUNT_POINT'\033[1;33m in filesystem table (\033[1;36m/etc/fstab\033[1;33m)\033[0m'
+            echo $mountline>>/etc/fstab
+        else
+            echo -e '\033[1;32m'$dev'\033[1;33m already saved as \033[1;32m'$MOUNT_POINT'\033[1;33m in filesystem table (\033[1;36m/etc/fstab\033[1;33m). No changes made.\033[0m'
+        fi
+		cat <<EOF >> /etc/samba/smb.conf
+	[$MOUNT_NAME]
+	path = $MOUNT_POINT
+	guest ok = yes
+	read only = no
+	writeable = yes
+		
+EOF
+		((counter++))
+    done
 fi
 
-get-samba
 get-php
-get-SimpleHTTPServerWithUpload
 get-games
 get-kodi
 desktop-settings
