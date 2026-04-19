@@ -101,13 +101,15 @@ cd /mnt/shared_media
 python3 /bin/SimpleHTTPServerWithUpload.py 8080
 EOF
 ## Create Service
-echo -e '[Unit]'>/lib/systemd/system/SimpleHTTPServerWithUpload.service
-echo -e 'Description=Simple HTTP Server With Upload'>>/lib/systemd/system/SimpleHTTPServerWithUpload.service
-echo -e '[Service]'>>/lib/systemd/system/SimpleHTTPServerWithUpload.service
-echo -e 'ExecStart=/bin/SimpleHTTPServerWithUpload.sh'>>/lib/systemd/system/SimpleHTTPServerWithUpload.service
-echo -e 'Restart=Always'>>/lib/systemd/system/SimpleHTTPServerWithUpload.service
-echo -e '[Install]'>>/lib/systemd/system/SimpleHTTPServerWithUpload.service
-echo -e 'WantedBy=multi-user.target'>>/lib/systemd/system/SimpleHTTPServerWithUpload.service
+cat <<EOF > /lib/systemd/system/SimpleHTTPServerWithUpload.service
+[Unit]
+Description=Simple HTTP Server With Upload
+[Service]
+ExecStart=/bin/SimpleHTTPServerWithUpload.sh
+Restart=Always
+[Install]
+WantedBy=multi-user.target
+EOF
 ## Change Permissions
 chmod +x -f /bin/SimpleHTTPServerWithUpload.sh
 chmod 0644 -f /lib/systemd/system/SimpleHTTPServerWithUpload.service
