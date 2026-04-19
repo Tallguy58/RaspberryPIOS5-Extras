@@ -60,32 +60,33 @@ cp -f /var/lib/flatpak/exports/share/applications/tv.kodi.Kodi.desktop /home/$cu
 
 ## Keymap settings...
 mkdir -p /home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/
-touch /home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '<keymap>'>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '  <global>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '    <keyboard>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <b>noop</b>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <backslash>noop</backslash>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <d>noop</d>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <e>noop</e>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <equals>noop</equals>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <g>noop</g>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <h>noop</h>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <k>noop</k>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <minus>noop</minus>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <numpadminus>noop</numpadminus>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <numpadplus>noop</numpadplus>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <t>noop</t>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <tab>noop</tab>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <plus>noop</plus>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <v>noop</v>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <volume_mute>noop</volume_mute>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <volume_down>noop</volume_down>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <volume_up>noop</volume_up>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '      <y>noop</y>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '    </keyboard>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '  </global>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
-echo -e '</keymap>'>>/home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
+cat <<EOF > /home/$currentuser/.var/app/tv.kodi.Kodi/data/userdata/keymaps/keyboard.xml
+<keymap>
+  <global>
+    <keyboard>
+      <b>noop</b>
+      <backslash>noop</backslash>
+      <d>noop</d>
+      <e>noop</e>
+      <equals>noop</equals>
+      <g>noop</g>
+      <h>noop</h>
+      <k>noop</k>
+      <minus>noop</minus>
+      <numpadminus>noop</numpadminus>
+      <numpadplus>noop</numpadplus>
+      <t>noop</t>
+      <tab>noop</tab>
+      <plus>noop</plus>
+      <v>noop</v>
+      <volume_mute>noop</volume_mute>
+      <volume_down>noop</volume_down>
+      <volume_up>noop</volume_up>
+      <y>noop</y>
+    </keyboard>
+  </global>
+</keymap>
+EOF
 }
 
 function get-SimpleHTTPServerWithUpload() {
