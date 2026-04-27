@@ -337,7 +337,7 @@ EOF
 			fi
 			run-in-user-session net usershare add $PREFIX$(printf "%02d" $counter) $MOUNT_POINT "Media Centre"$(printf "%02d" $counter) Everyone:F guest_ok=y
         fi
-		MOUNT_NAME="${MOUNT_POINT#\/mnt\/}"
+		MOUNT_NAME=$(echo "${MOUNT_POINT#\/mnt\/}" | sed 's/_/ /g' | sed -r 's/\b([a-z])([a-z0-9_]*)/\u\1\2/g')
         uuid=$(blkid -s UUID $dev | cut -f2 -d':' | cut -c2-)
         mountline=$uuid" "$MOUNT_POINT" auto nosuid,nodev,nofail 0 0"
         if ! grep -Fxq $uuid" "$MOUNT_POINT" auto nosuid,nodev,nofail 0 0" /etc/fstab; then
