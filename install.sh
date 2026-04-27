@@ -322,9 +322,9 @@ else
 EOF
     BASE_DIR="/mnt"
     PREFIX="shared_media"
-    counter=0
+    counter=1
     for dev in $(blkid -t TYPE=ntfs -o device); do
-        if [ $counter -eq 0 ]; then
+        if [ $counter -eq 1 ]; then
             MOUNT_POINT="${BASE_DIR}/${PREFIX}"
 			if [ ! -d "$MOUNT_POINT" ]; then
 				mkdir -p "$MOUNT_POINT"
