@@ -3,7 +3,7 @@
 currentuser=$(users | awk '{print $1}')
 
 if [ "$XDG_CURRENT_DESKTOP" != "LXDE" ]; then
-    echo -e '\033cGraphical environment \033[1;31mX11\033[0m not detected.\n'
+    echo -e '\033[H\033[2JGraphical environment \033[1;31mX11\033[0m not detected.\n'
     read -n 1 -s -r -p 'Press ANY key to update and reboot...'
 	sed /etc/lightdm/lightdm.conf -i -e "s/^#\\?user-session.*/user-session=rpd-x/"
 	sed /etc/lightdm/lightdm.conf -i -e "s/^#\\?autologin-session.*/autologin-session=rpd-x/"
@@ -43,7 +43,7 @@ fi
 }
 
 function get-kodi() {
-echo -e '\033c\033[1;33mInstalling \033[1;34mKODI Media Centre\033[0m'
+echo -e '\033[1;33mInstalling \033[1;34mKODI Media Centre\033[0m'
 mkdir -p /var/lib/flatpak/exports/share
 mkdir -p /root/.local/share/flatpak/exports/share
 install-package flatpak
@@ -172,7 +172,7 @@ cp -f /usr/share/applications/org.gnome.Mahjongg.desktop /home/$currentuser/Desk
 }
 
 function get-php() {
-echo -e '\033c\033[1;33mInstalling \033[1;34mApache\033[0m'
+echo -e '\033[1;33mInstalling \033[1;34mApache\033[0m'
 file="/etc/apt/sources.list.d/php.list"
 if [ -f "$file" ] ; then
     rm -f "$file"
