@@ -17,6 +17,15 @@ if [ "$XDG_CURRENT_DESKTOP" != "LXDE" ]; then
     reboot
 fi
 
+remove-package() {
+if dpkg -s $1 >/dev/null 2>&1; then
+    echo -e '\033[1;33mRemoving   \033[1;31m'$1' \033[0m\c'
+    sudo apt-get -y -qq purge $1 >/dev/null
+    sudo apt-get -y -qq autoremove >/dev/null
+    echo -e '\033[1;36m... OK\033[0m'
+fi
+}
+
 install-package() {
 if ! dpkg -s $1 >/dev/null 2>&1; then
     echo -e '\033[1;33mInstalling \033[1;32m'$1' \033[0m\c'
@@ -28,6 +37,10 @@ fi
 install-package cinnamon-desktop-environment
 install-package lightdm-gtk-greeter-settings
 install-package cinnamon
+remove-package squeekboard
+remove-package wfplug-squeek
+remove-package matchbox-keyboard
+remove-package orca
 update-alternatives --set x-session-manager /usr/bin/cinnamon-session >/dev/null
 sed -i 's/.*autologin-user=.*/autologin-user='$currentuser'/' /etc/lightdm/lightdm.conf
 sed -i 's/.*greeter-session=pi-greeter.*/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
